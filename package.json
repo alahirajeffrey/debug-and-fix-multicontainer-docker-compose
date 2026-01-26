@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node app/server.js"
+    "build": "npx tsc",
+    "start": "node dist/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +15,8 @@
     "mongoose": "^9.1.5"
   },
   "devDependencies": {
+    "typescript": "^5.9.3",
+    "@types/express": "^5.0.6",
     "supertest": "^7.2.2"
   }
 }
