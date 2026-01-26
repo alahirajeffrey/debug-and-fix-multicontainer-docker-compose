@@ -1,0 +1,14 @@
+import app from "./app";
+import { connectDB } from "./connectMongo";
+
+const PORT = Number(process.env.PORT) || 3000;
+
+const startServer = async (): Promise<void> => {
+  await connectDB();
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+startServer();
