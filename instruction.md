@@ -21,6 +21,8 @@ How to run:
 
 This project should:
 
-1. Build and start and nodejs and mongodb application
-2. Nodejs application should connect to the mongodb with the right environment variable
-3. Health checks should pass correctly
+1. Nodejs project should build correctly
+2. MongoDB should start up
+3. Nodejs application should start up
+4. Nodejs application should connect to the mongodb with the right environment variable
+5. Health checks should pass correctly
