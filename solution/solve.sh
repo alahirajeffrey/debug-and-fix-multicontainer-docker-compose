@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
-# Step 1: Set up environment
-cd /app
+# # Step 1: Set up environment
+# cd /app
 
-COMPOSE_FILE="docker-compose.yml"
+COMPOSE_FILE="compose.yml"
 
 if [ ! -f "$COMPOSE_FILE" ]; then
   echo "docker-compose.yml not found"
@@ -20,7 +20,14 @@ sed -i 's/MONGO_INITDB_ROOT_PASSWORD: \${MONGO_USERNAME}/MONGO_INITDB_ROOT_PASSW
 # Step 4: Start application
 echo "Starting application"
 docker compose up -d --build
-sleep 8
+sleep 10
 
-Step 5: Verify
-curl -s http://localhost:3000/health | grep -q "ok"
+# Step 5: Verify
+echo "Running health check..."
+
+if curl -s http://localhost:3000/health | grep -q "healthy"; then
+  echo "Health check passed"
+else
+  echo "Health check failed"
+  exit 1
+fi
