@@ -1,4 +1,4 @@
-FROM node:22.15.0-bookworm-slim@sha256:b8caa4f03563e92810d385d7cc92a33d9617865d0d4dd31a3d8728c87c723e08 AS builder
+FROM node:22.15.0-bookworm-slim@sha256:557e52a0fcb928ee113df7e1fb5d4f60c1341dbda53f55e3d815ca10807efdce AS builder
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -18,7 +18,7 @@ COPY src ./src
 RUN npm run build
 
 
-FROM node:22.15.0-bookworm-slim@sha256:b8caa4f03563e92810d385d7cc92a33d9617865d0d4dd31a3d8728c87c723e08
+FROM node:22.15.0-bookworm-slim@sha256:557e52a0fcb928ee113df7e1fb5d4f60c1341dbda53f55e3d815ca10807efdce
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
