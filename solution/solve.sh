@@ -1,32 +1,26 @@
 #!/usr/bin/env bash
 set -e
 
-echo "Starting application"
-docker compose up -d
+# Step 1: Set up environment
+cd /app
 
-echo "Waiting for /health to return 200..."
+COMPOSE_FILE="docker-compose.yml"
 
-MAX_RETRIES=10
-SLEEP_SECONDS=2
-
-for i in $(seq 1 $MAX_RETRIES); do
-  STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:3000/health || true)
-
-  if [ "$STATUS" = "200" ]; then
-    echo "✅ /health returned 200"
-    break
-  fi
-
-  echo "Attempt $i/$MAX_RETRIES: /health returned ${STATUS:-"no response"}"
-  sleep $SLEEP_SECONDS
-done
-
-if [ "$STATUS" != "200" ]; then
-  echo "❌ Service failed health check"
-  docker compose down
+if [ ! -f "$COMPOSE_FILE" ]; then
+  echo "docker-compose.yml not found"
   exit 1
 fi
 
-echo "Shutting down application"
-sleep $SLEEP_SECONDS
-docker compose down
+# Step 2: Fix Mongo username mapping 
+sed -i 's/MONGO_INITDB_ROOT_USERNAME: \${MONGO_PASSWORD}/MONGO_INITDB_ROOT_USERNAME: \${MONGO_INITDB_ROOT_USERNAME}/' "$COMPOSE_FILE"
+
+# Step 3: Fix Mongo password mapping
+sed -i 's/MONGO_INITDB_ROOT_PASSWORD: \${MONGO_USERNAME}/MONGO_INITDB_ROOT_PASSWORD: \${MONGO_INITDB_ROOT_PASSWORD}/' "$COMPOSE_FILE"
+
+# Step 4: Start application
+echo "Starting application"
+docker compose up -d --build
+sleep 8
+
+Step 5: Verify
+curl -s http://localhost:3000/health | grep -q "ok"
