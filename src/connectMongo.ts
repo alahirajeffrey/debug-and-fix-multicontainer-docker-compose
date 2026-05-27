@@ -21,6 +21,6 @@ export const connectDB = async (): Promise<void> => {
     }
   }
 
-  console.error("MongoDB connection failed after retries");
+  console.error(`MongoDB connection failed after ${retries} retries`);
   process.exit(1);
 };
