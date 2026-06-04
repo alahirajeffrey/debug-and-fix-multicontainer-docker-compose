@@ -4,6 +4,9 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         tmux=3.3a-3 \
         asciinema=2.2.0-1 \
+        python3 \
+        python3-pip \
+    && pip3 install python-dotenv==1.2.2 --break-system-packages  \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -24,6 +27,9 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         tmux=3.3a-3 \
         asciinema=2.2.0-1 \
+        python3 \
+        python3-pip \
+    && pip3 install python-dotenv==1.2.2 --break-system-packages  \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
