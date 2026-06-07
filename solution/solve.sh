@@ -1,33 +1,19 @@
 #!/usr/bin/env bash
 set -e
 
-# # Step 1: Set up environment
-# cd /app
+# Step 1: fetch proper variables from environment
+MONGO_USERNAME="$MONGO_INITDB_ROOT_USERNAME"
+MONGO_PASSWORD="$MONGO_INITDB_ROOT_PASSWORD"
 
-COMPOSE_FILE="compose.yml"
-
-if [ ! -f "$COMPOSE_FILE" ]; then
-  echo "docker-compose.yml not found"
+if [ -z "$MONGO_USERNAME" ] || [ -z "$MONGO_PASSWORD" ]; then
+  echo "Missing environment variables"
+  echo "MONGO_INITDB_ROOT_USERNAME and MONGO_INITDB_ROOT_PASSWORD must be set"
   exit 1
 fi
 
-# Step 2: Fix Mongo username mapping 
-sed -i 's/MONGO_INITDB_ROOT_USERNAME:.*/MONGO_INITDB_ROOT_USERNAME: \${MONGO_INITDB_ROOT_USERNAME}/' "$COMPOSE_FILE"
+# Step 2: Update mongo uri environment variable
+export MONGO_URI="mongodb://$MONGO_USERNAME:$MONGO_PASSWORD@mongo:27017/appdb?authSource=admin"
 
-# Step 3: Fix Mongo password mapping
-sed -i 's/MONGO_INITDB_ROOT_PASSWORD:.*/MONGO_INITDB_ROOT_PASSWORD: \${MONGO_INITDB_ROOT_PASSWORD}/' "$COMPOSE_FILE"
+# Step 3: Restart server 
+node dist/server.js
 
-# Step 4: Start application
-echo "Starting application"
-docker compose up -d --build
-sleep 10
-
-# Step 5: Verify
-echo "Running health check..."
-
-if curl -s http://localhost:3000/health | grep -q "healthy"; then
-  echo "Health check passed"
-else
-  echo "Health check failed"
-  exit 1
-fi
